@@ -9,15 +9,34 @@ end
 p4_exe_url = get_ftp_path(node['perforce']['version'], p4_exe)
 remote_file ::File.join(node['perforce']['bin_dir'], p4_exe) do
   source p4_exe_url
-  owner 'root'
-  group 'root'
-  mode 00755
+
+  if node[:os] == 'windows'
+    rights :read_execute, 'Everyone'
+    rights :full_control, 'Administrators'
+  else
+    owner 'root'
+    group 'root'
+    mode 00755
+  end
+
 end
 
 p4d_exe_url = get_ftp_path(node['perforce']['version'], p4d_exe)
 remote_file ::File.join(node['perforce']['bin_dir'], p4d_exe) do
   source p4d_exe_url
-  owner 'root'
-  group 'root'
-  mode 00755
+
+  if node[:os] == 'windows'
+    rights :read_execute, 'Everyone'
+    rights :full_control, 'Administrators'
+  else
+    owner 'root'
+    group 'root'
+    mode 00755
+  end
+end
+
+if node[:os] == 'windows'
+  windows_path node['perforce']['bin_dir'] do
+    action :add
+  end
 end
